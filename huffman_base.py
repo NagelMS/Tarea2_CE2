@@ -141,7 +141,7 @@ for code in huffmanCode:
 print("Varianza del código original: " + str(code_variance_new))
 
 #Determinar e imprimir la eficiencia del código original:
-avg_length_old=0
+avg_length_old=entropy/8 #hardcoded a 8 bits en las codificaciones originales
 print("Eficiencia del código original: " + str(avg_length_old))
 
 #Determinar e imprimir la eficiencia del nuevo código generado:
