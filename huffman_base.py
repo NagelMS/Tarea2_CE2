@@ -136,6 +136,8 @@ print("Largo promedio: " + str(avg_length_new))
 
 #Determinar e imprimir la varianza del nuevo código generado:
 code_variance_new=0
+for code in huffmanCode:
+    code_variance_new+=freq[code]*((len(huffmanCode[code])-avg_length_new)**2)
 print("Varianza del código original: " + str(code_variance_new))
 
 #Determinar e imprimir la eficiencia del código original:
