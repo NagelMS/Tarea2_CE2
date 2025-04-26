@@ -5,6 +5,7 @@ import csv
 from math import log2
 
 # Parametros de entrada y ayuda:
+output_directory="salidas"
 file_full_path = ""
 file_split_path = []
 def myfunc(argv):
@@ -33,8 +34,8 @@ if __name__ == "__main__":
     myfunc(sys.argv)
 
 
-file_huffman_comprimido = file_full_path+".huffman"
-ruta_diccionario = file_full_path+".diccionario.csv"
+file_huffman_comprimido =os.path.splitext(os.path.basename(file_full_path))[0]+".huffman"
+ruta_diccionario = os.path.splitext(os.path.basename(file_full_path))[0]+"_diccionario.csv"
 recovered_path = os.path.join(file_split_path[0], "recovered_"+file_split_path[1])
 #-----------------------------------------------------
 # Algorithmo de compresión de huffman
@@ -62,22 +63,22 @@ class NodeTree(object):
 def insert_in_tree(raiz, ruta, valor):
     if(len(ruta)==1):
         if(ruta=='0'):
-            raiz.left = valor;
+            raiz.left = valor
         else:
-            raiz.right = valor;
+            raiz.right = valor
     else:
         if(ruta[0]=='0'):
             #if type(raiz.left) is int:
             if(raiz.left==None):
-                raiz.left = NodeTree(None,None);
-            ruta = ruta[1:];
-            insert_in_tree(raiz.left,ruta,valor);
+                raiz.left = NodeTree(None,None)
+            ruta = ruta[1:]
+            insert_in_tree(raiz.left,ruta,valor)
         else:
             #if type(raiz.right) is int:
             if(raiz.right==None):
-                raiz.right = NodeTree(None,None);
-            ruta = ruta[1:];
-            insert_in_tree(raiz.right,ruta,valor);
+                raiz.right = NodeTree(None,None)
+            ruta = ruta[1:]
+            insert_in_tree(raiz.right,ruta,valor)
 
 
 # Función principal del algoritmo de Huffman
@@ -147,3 +148,32 @@ print("Eficiencia del código original: " + str(avg_length_old))
 #Determinar e imprimir la eficiencia del nuevo código generado:
 new_code_efficiency=entropy/avg_length_new
 print("Eficiencia del nuevo código generado: " + str(new_code_efficiency))
+
+#Compresión del archivo original 
+binary_string = []
+for c in string :
+    binary_string += huffmanCode [c]
+
+compressed_length_bit = len( binary_string )
+
+if( compressed_length_bit %8>0):
+    for i in range (8 - len( binary_string ) % 8) :
+        binary_string += "0"
+
+byte_string ="". join ([ str( i ) for i in binary_string ])
+byte_string =[ byte_string [ i : i +8] for i in range (0 , len( byte_string ), 8) ]
+
+#Escribir el archivo con los datos comprimidos
+compressed_file=open(f"{output_directory}/{file_huffman_comprimido}","wb")
+byte_string=bytearray([int(i,2) for i in byte_string])
+compressed_file.write(byte_string)
+compressed_file.close()
+
+
+csvfile = open(f"{output_directory}/{ruta_diccionario}","w")
+writer = csv.writer ( csvfile )
+writer.writerow ([ str ( compressed_length_bit ) ," bits "])
+
+for entrada in huffmanCode :
+    writer.writerow ([ str ( entrada ) , huffmanCode [ entrada ]])
+csvfile.close()
