@@ -36,7 +36,7 @@ if __name__ == "__main__":
 
 file_huffman_comprimido =os.path.splitext(os.path.basename(file_full_path))[0]+".huffman"
 ruta_diccionario = os.path.splitext(os.path.basename(file_full_path))[0]+"_diccionario.csv"
-recovered_path = os.path.join(file_split_path[0], "recovered_"+file_split_path[1])
+recovered_path = os.path.join(output_directory, "recovered_"+file_split_path[1])
 #-----------------------------------------------------
 # Algorithmo de compresión de huffman
 #-----------------------------------------------------
@@ -68,16 +68,19 @@ def insert_in_tree(raiz, ruta, valor):
         else:
             raiz.right = valor
     else:
-        if(ruta[0]=='0'):
-            if(raiz.left==None):
-                raiz.left = NodeTree(None,None)
-            ruta = ruta[1:]
-            insert_in_tree(raiz.left,ruta,valor)
-        else:
-            if(raiz.right==None):
-                raiz.right = NodeTree(None,None)
-            ruta = ruta[1:]
-            insert_in_tree(raiz.right,ruta,valor)
+        try:
+            if( ruta[0]=='0'):
+                if(raiz.left==None):
+                    raiz.left = NodeTree(None,None)
+                ruta = ruta[1:]
+                insert_in_tree(raiz.left,ruta,valor)
+            else:
+                if(raiz.right==None):
+                    raiz.right = NodeTree(None,None)
+                ruta = ruta[1:]
+                insert_in_tree(raiz.right,ruta,valor)
+        except: 
+            None
 
 
 #Función principal del algoritmo de Huffman.
@@ -144,8 +147,11 @@ avg_length_old=entropy/8 #hardcoded a 8 bits en las codificaciones originales
 print("Eficiencia del código original: " + str(avg_length_old))
 
 #Determinar e imprimir la eficiencia del nuevo código generado:
-new_code_efficiency=entropy/avg_length_new
-print("Eficiencia del nuevo código generado: " + str(new_code_efficiency))
+try:
+    new_code_efficiency=entropy/avg_length_new
+    print("Eficiencia del nuevo código generado: " + str(new_code_efficiency))
+except:
+    print("Largo promedio igual a 0, todos los símbolos son iguales y no se genera diccionario de compresión.")
 
 #Mostrar bytes del archivo original sin comprimir:
 print("Cantidad de bytes en el archivo sin compresión: "+ str(len(string)))
@@ -167,8 +173,11 @@ byte_string =[ byte_string [ i : i +8] for i in range (0 , len( byte_string ), 8
 #Mostrar bytes del archivo comprimido:
 print("Cantidad de bytes en el archivo con compresión: "+ str(len(byte_string)))
 
-#Mostrar tasa de compresion:
-print("Tasa de compresión: " + str(len(string)/len(byte_string)))
+try:
+    #Mostrar tasa de compresion:
+    print("Tasa de compresión: " + str(len(string)/len(byte_string)))
+except:
+    print("No se calcula la tasa de compresión debido a que no hay diccionario de compresión.")
 
 #Escribir el archivo con los datos comprimidos.
 compressed_file=open(f"{output_directory}/{file_huffman_comprimido}","wb")
@@ -210,6 +219,11 @@ for i in range ( compressed_length_bit ) :
         data_estimated . append(nodo)
         nodo = Decoding
 
-
 #Mostrar bytes del archivo original después de descomprimir:
-print("Cantidad de bytes en el archivo descomprimido: "+ str(len(string)))
+print("Cantidad de bytes en el archivo descomprimido: "+ str(len(data_estimated)))
+
+#Guardar archivo descomprimido
+decompressed_file=open(recovered_path,"wb")
+byte_decompress=bytearray(data_estimated)
+decompressed_file.write(byte_decompress)
+decompressed_file.close()
