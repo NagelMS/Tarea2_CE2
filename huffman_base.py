@@ -4,7 +4,8 @@ import getopt
 import csv
 from math import log2
 
-# Parametros de entrada y ayuda:
+#Parámetros de entrada y ayuda:
+output_directory="salidas"
 file_full_path = ""
 file_split_path = []
 def myfunc(argv):
@@ -33,21 +34,22 @@ if __name__ == "__main__":
     myfunc(sys.argv)
 
 
-file_huffman_comprimido = file_full_path+".huffman"
-ruta_diccionario = file_full_path+".diccionario.csv"
+file_huffman_comprimido =os.path.splitext(os.path.basename(file_full_path))[0]+".huffman"
+ruta_diccionario = os.path.splitext(os.path.basename(file_full_path))[0]+"_diccionario.csv"
 recovered_path = os.path.join(file_split_path[0], "recovered_"+file_split_path[1])
 #-----------------------------------------------------
 # Algorithmo de compresión de huffman
 #-----------------------------------------------------
-#Apertura y lectura del archivo
-string=[];
+
+#Apertura y lectura del archivo.
+string=[]
 with open(file_full_path, "rb") as f:
     while (byte := f.read(1)):
         # Do stuff with byte.
         int_val = int.from_bytes(byte, "big")
         string.append(int_val)
 
-# Árbol binario
+#Árbol binario.
 class NodeTree(object):
     def __init__(self, left=None, right=None):
         self.left = left
@@ -62,25 +64,23 @@ class NodeTree(object):
 def insert_in_tree(raiz, ruta, valor):
     if(len(ruta)==1):
         if(ruta=='0'):
-            raiz.left = valor;
+            raiz.left = valor
         else:
-            raiz.right = valor;
+            raiz.right = valor
     else:
         if(ruta[0]=='0'):
-            #if type(raiz.left) is int:
             if(raiz.left==None):
-                raiz.left = NodeTree(None,None);
-            ruta = ruta[1:];
-            insert_in_tree(raiz.left,ruta,valor);
+                raiz.left = NodeTree(None,None)
+            ruta = ruta[1:]
+            insert_in_tree(raiz.left,ruta,valor)
         else:
-            #if type(raiz.right) is int:
             if(raiz.right==None):
-                raiz.right = NodeTree(None,None);
-            ruta = ruta[1:];
-            insert_in_tree(raiz.right,ruta,valor);
+                raiz.right = NodeTree(None,None)
+            ruta = ruta[1:]
+            insert_in_tree(raiz.right,ruta,valor)
 
 
-# Función principal del algoritmo de Huffman
+#Función principal del algoritmo de Huffman.
 def huffman_code_tree(node, left=True, binString=''):
     if type(node) is int:
         return {node: binString}
@@ -91,7 +91,7 @@ def huffman_code_tree(node, left=True, binString=''):
     return d
     
 
-# calculo de frecuencias y probabilidades
+#Calculo de frecuencias y probabilidades.
 prob_unit = 1/len(string)
 freq = {}
 for c in string:
@@ -109,7 +109,6 @@ while len(nodes) > 1:
     nodes = nodes[:-2]
     node = NodeTree(key1, key2)
     nodes.append((node, c1 + c2))
-    #print(nodes)
     nodes = sorted(nodes, key=lambda x: x[1], reverse=True)
 
 huffmanCode = huffman_code_tree(nodes[0][0]) #Diccionario {símbolo:código}
@@ -136,12 +135,81 @@ print("Largo promedio: " + str(avg_length_new))
 
 #Determinar e imprimir la varianza del nuevo código generado:
 code_variance_new=0
+for code in huffmanCode:
+    code_variance_new+=freq[code]*((len(huffmanCode[code])-avg_length_new)**2)
 print("Varianza del código original: " + str(code_variance_new))
 
 #Determinar e imprimir la eficiencia del código original:
-avg_length_old=0
+avg_length_old=entropy/8 #hardcoded a 8 bits en las codificaciones originales
 print("Eficiencia del código original: " + str(avg_length_old))
 
 #Determinar e imprimir la eficiencia del nuevo código generado:
 new_code_efficiency=entropy/avg_length_new
 print("Eficiencia del nuevo código generado: " + str(new_code_efficiency))
+
+#Mostrar bytes del archivo original sin comprimir:
+print("Cantidad de bytes en el archivo sin compresión: "+ str(len(string)))
+
+#Compresión del archivo original.
+binary_string = []
+for c in string :
+    binary_string += huffmanCode [c]
+
+compressed_length_bit = len( binary_string )
+
+if( compressed_length_bit %8>0):
+    for i in range (8 - len( binary_string ) % 8) :
+        binary_string += "0"
+
+byte_string ="". join ([ str( i ) for i in binary_string ])
+byte_string =[ byte_string [ i : i +8] for i in range (0 , len( byte_string ), 8) ]
+
+#Mostrar bytes del archivo comprimido:
+print("Cantidad de bytes en el archivo con compresión: "+ str(len(byte_string)))
+
+#Mostrar tasa de compresion:
+print("Tasa de compresión: " + str(len(string)/len(byte_string)))
+
+#Escribir el archivo con los datos comprimidos.
+compressed_file=open(f"{output_directory}/{file_huffman_comprimido}","wb")
+byte_string=bytearray([int(i,2) for i in byte_string])
+compressed_file.write(byte_string)
+compressed_file.close()
+
+#Generar archivo .csv del diccionario utilizado en la codificación.
+csvfile = open(f"{output_directory}/{ruta_diccionario}","w")
+writer = csv.writer ( csvfile )
+writer.writerow ([ str ( compressed_length_bit ) ," bits "])
+
+for entrada in huffmanCode:
+    writer.writerow ([ str ( entrada ) , huffmanCode [ entrada ]])
+csvfile.close()
+
+#Abrir diccionario y descomprimir datos.
+csvfile = open (f"{output_directory}/{ruta_diccionario}" , "r")
+reader = csv . reader ( csvfile )
+bits_a_leer = None 
+diccionario = dict () 
+for row in reader :
+    if( bits_a_leer == None ) :
+        bits_a_leer = int( row [0]) 
+    else:
+        diccionario.update ({ int( row [0]) : row [1]})
+Decoding = NodeTree ( None , None ) 
+for entrada in diccionario :
+    insert_in_tree ( Decoding , diccionario [ entrada ] , entrada )
+nodo = Decoding 
+data_estimated = []
+for i in range ( compressed_length_bit ) :
+    (l , r ) = nodo . children () 
+    if( binary_string [ i ]== "1") :
+        nodo = r
+    else:
+        nodo = l
+    if type ( nodo ) is int :
+        data_estimated . append(nodo)
+        nodo = Decoding
+
+
+#Mostrar bytes del archivo original después de descomprimir:
+print("Cantidad de bytes en el archivo descomprimido: "+ str(len(string)))
