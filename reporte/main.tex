@@ -1,0 +1,137 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+\hyphenation{op-tical net-works semi-conduc-tor}
+\usepackage{fancyhdr}
+\usepackage{lipsum}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{comment}
+\usepackage{xcolor}
+\usepackage{float}
+\usepackage{svg}
+\usepackage{tabularx}
+\usepackage{hyperref}
+\usepackage{breqn}
+\usepackage{makecell}
+\usepackage{siunitx}
+\usepackage{hyperref}
+\usepackage{multirow}
+
+\usepackage[style=numeric]{biblatex}  % Choose a style like numeric, authoryear, etc.
+\addbibresource{references.bib}       % Note: use this instead of \bibliography
+
+\defbibheading{bibliography}[\bibname]{\section*{Referencias}}
+
+%\usepackage{circuitikz}
+
+%\addbibresource{references.bib}
+\renewcommand{\IEEEkeywordsname}{Palabras Clave}
+\renewcommand{\tablename}{Tabla} 
+\renewcommand{\abstractname}{Resumen} 
+\renewcommand{\figurename}{Fig.}
+\numberwithin{equation}{subsection}
+
+%-------------------------No tocar de aqui para atras-----------
+
+%-------------------------Título y nombres-----------
+\begin{document}
+
+\title{Proyecto 2: Códigos de Huffamn}
+\author{
+\IEEEauthorblockN{
+Fabián Alonso Gómez Quesada\IEEEauthorrefmark{1}, Wilberth Daniel Gutiérrez Montero\IEEEauthorrefmark{2} \\
+Nagel Eduardo Mejía Segura\IEEEauthorrefmark{3}, Oscar Mario González Cambronero\IEEEauthorrefmark{4}
+}
+\IEEEauthorblockA{
+\IEEEauthorrefmark{1}\IEEEauthorrefmark{2}\IEEEauthorrefmark{3}\IEEEauthorrefmark{4} Escuela de Ingeniería en Electrónica, Instituto Tecnológico de Costa Rica. \\
+\small Emails: fabi.goque@estudiantec.cr, wil.gutierrez@estudiantec.cr,\\ nagelmese@estudiantec.cr, oscargonzalezc@estudiantec.cr
+}
+}
+
+
+\maketitle
+\thispagestyle{plain}
+\pagestyle{plain}
+%------- %-------------------------Inicio----------- 
+
+\begin{abstract} 
+
+  
+
+\end{abstract} %-------------------------Palabras clave----------- \begin{IEEEkeywords} Diplexor, Reflexión, Impedancia, Longitud, Línea de Transmisión. \end{IEEEkeywords} 
+
+\section{Introducción} 
+
+
+
+
+
+
+
+\section{Desarrollo del proyecto}
+
+\subsection{Implementación del código de huffman}
+
+¿Cómo se implementa el algoritmo de generación de códigos Huffman?
+
+\subsection{Resultados de archivos}
+
+\subsubsection{Archivo de texto abecedario}
+
+Primero, en cuanto al archivo \textbf{solo\_abc\_cien.txt} los datos están codificados según el código ASCII, sin embargo, está bajo el estandar UTF-8, por lo que cada caracter es de 8 bits. como se repiten todas las letras 100 veces, cada simbolo es equiprobable, lo que se podría esperar tras correr el código, es que la mayoría de simbolos tengan la misma longitud, dicho de otro modo la varianza sería pequeña.
+
+Al correr el código con dicho archivo, se obtiene la Tabla \ref{tab:huffman_abc} donde se observa que la mayoría de códigos tienen 5 bits, con excepción de 6 simbolos que contemplan 4 bits.
+
+\begin{table}[h!]
+    \centering
+    \caption{Códigos Huffman para caracteres ASCII (A-Z)}
+    \label{tab:huffman_abc}
+    \begin{tabular}{|c|c|c|}
+    \hline
+    \textbf{Char (decimal)} & \textbf{Símbolo} & \textbf{Código Huffman} \\ \hline
+    65 & A & 0001 \\ \hline
+    66 & B & 0000 \\ \hline
+    67 & C & 0011 \\ \hline
+    68 & D & 0010 \\ \hline
+    69 & E & 10101 \\ \hline
+    70 & F & 10100 \\ \hline
+    71 & G & 10111 \\ \hline
+    72 & H & 10110 \\ \hline
+    73 & I & 10001 \\ \hline
+    74 & J & 10000 \\ \hline
+    75 & K & 10011 \\ \hline
+    76 & L & 10010 \\ \hline
+    77 & M & 11101 \\ \hline
+    78 & N & 11100 \\ \hline
+    79 & O & 11111 \\ \hline
+    80 & P & 11110 \\ \hline
+    81 & Q & 11001 \\ \hline
+    82 & R & 11000 \\ \hline
+    83 & S & 11011 \\ \hline
+    84 & T & 11010 \\ \hline
+    85 & U & 01101 \\ \hline
+    86 & V & 01100 \\ \hline
+    87 & W & 01111 \\ \hline
+    88 & X & 01110 \\ \hline
+    89 & Y & 0101 \\ \hline
+    90 & Z & 0100 \\ \hline
+    \end{tabular}
+\end{table}
+
+
+
+
+\section{Conclusión} 
+
+
+\printbibliography  
+
+\end{document} 
+
+ 
+
+ 
+
+ 
