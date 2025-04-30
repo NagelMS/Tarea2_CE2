@@ -208,6 +208,60 @@ En la Tabla \ref{tab:huffman_resultados} se observan los resultados al ejecutar 
 \subsection{Restablecimiento de los datos originales - Descompresión}
 
 \subsection{Efecto de la entropía de la fuente}
+\textbf{¿Qué diferencias hay entre ellos? }
+
+\begin{table}[h!]
+    \centering
+    \caption{Comparación misma imagen con distinto formato }
+    \label{tab:jpeg_vs_tiff}
+    \begin{tabular}{cccc}
+    \toprule
+    \textbf{Tipo} & \textbf{Tamaño} & \textbf{Ancho} & \textbf{Largo} \\
+    \midrule
+    Imagen JPEG & 59.3 kB (59,323 bytes) & 512 pixels & 512 pixels \\
+    Imagen TIFF & 262.3 kB(262,278 bytes)& 512 pixels & 512 pixels \\
+    \bottomrule
+    \end{tabular}
+\end{table}
+
+
+Al revisar las propiedades de ambos  archivos es notorio que para el caso del archivo .tiff tiene un mayor tamaño en comparación del archivo .jpeg, según la Tab.\ref{tab:jpeg_vs_tiff}  se puede ver que .tiff es aproximadamente es 5 veces el tamaño de .jpeg. Esto tiene sentido dado que la teoría la diferencia entre estos dos es la comprensión que se refleja en el tamaño y calidad de las imágenes, para el caso del formato JPEG utiliza compresión con pérdidas y el caso TIFF utiliza compresión sin pérdidas.
+
+
+\textbf{Formato JPEG}
+
+JPEG por sus siglas de Joint Photographic Experts Group (Grupo Conjunto de Expertos en Fotografía), fue una organización internacional que estandarizó el formato a finales de los ochenta y principios de los noventa. Es el formato de archivo preferido para las imágenes digitales, y lo ha sido desde que los fotógrafos empezaron a capturar y almacenar imágenes en cámaras digitales y otros dispositivos reprográficos\cite{balanis}.
+
+Las imágenes JPEG agrupan las siguientes extensiones de nombre de archivo:
+
+\begin{itemize}
+\item .jpg
+\item .jpeg
+\item .jpe
+\item .jif
+\item .jfif
+\item .jfi
+\end{itemize}
+
+
+Un archivo JPEG admite hasta 24 bits de color y utiliza compresión con pérdida para comprimir las imágenes y facilitar su almacenamiento y envío. Esto puede hacer que los JPEG sean mejores para el uso diario, pero implica sacrificar parte de la calidad de la imagen original.
+
+
+\textbf{Formato TIFF}
+Un TIFF(Tag Image File Format) es un archivo informático utilizado para almacenar gráficos rasterizados e información de imágenes. Los TIFF, favoritos de los fotógrafos, son una forma práctica de almacenar imágenes de alta calidad antes de editarlas si quieres evitar los formatos de archivo con pérdidas.
+
+Archivos TIFF:
+\begin{itemize}
+\item Tienen extensión .tiff o .tif.
+\item Son una forma de compresión de archivos sin pérdidas, lo que significa que son más grandes que la mayoría pero no pierden calidad de imagen.
+\item Los TIFF no son los archivos más pequeños que existen, pero permiten al usuario etiquetar información y datos adicionales de la imagen, como capas adicionales.
+\end{itemize}
+
+
+
+
+\textbf{¿Qué diferencias ve en los resultados? ¿Porqué se da un cambio tam grande?}
+
 
 \section{Conclusiones} 
 
