@@ -26,7 +26,6 @@
 
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
-\usepackage[spanish,es-tabla]{babel}
 
 \usepackage{longtable}
 
@@ -43,7 +42,6 @@
   breaklines=true,
   captionpos=b
 }
-\selectlanguage{spanish}
 
 \usepackage[style=numeric]{biblatex}  % Choose a style like numeric, authoryear, etc.
 \addbibresource{references.bib}       % Note: use this instead of \bibliography
@@ -827,7 +825,7 @@ Al revisar las propiedades de ambos  archivos se puede constatar que para el cas
 
 \textbf{Formato JPEG}
 
-JPEG por sus siglas de Joint Photographic Experts Group (Grupo Conjunto de Expertos en Fotografía), fue una organización internacional que estandarizó el formato a finales de los ochenta y principios de los noventa. Es el formato de archivo preferido para las imágenes digitales, y lo ha sido desde que los fotógrafos empezaron a capturar y almacenar imágenes en cámaras digitales y otros dispositivos reprográficos \cite{balanis}.
+JPEG por sus siglas de Joint Photographic Experts Group (Grupo Conjunto de Expertos en Fotografía), fue una organización internacional que estandarizó el formato a finales de los ochenta y principios de los noventa. Es el formato de archivo preferido para las imágenes digitales, y lo ha sido desde que los fotógrafos empezaron a capturar y almacenar imágenes en cámaras digitales y otros dispositivos reprográficos \cite{jpeg}.
 
 Las imágenes JPEG agrupan las siguientes extensiones de nombre de archivo:
 
@@ -846,7 +844,7 @@ Un archivo JPEG admite hasta 24 bits de color y utiliza compresión con pérdida
 
 \textbf{Formato TIFF}
 
-Un TIFF(Tag Image File Format) es un archivo informático utilizado para almacenar gráficos rasterizados e información de imágenes. Los TIFF, favoritos de los fotógrafos, son una forma práctica de almacenar imágenes de alta calidad antes de editarlas si quieres evitar los formatos de archivo con pérdidas.
+Un TIFF(Tag Image File Format) es un archivo informático utilizado para almacenar gráficos rasterizados e información de imágenes. Los TIFF, favoritos de los fotógrafos, son una forma práctica de almacenar imágenes de alta calidad antes de editarlas si quieres evitar los formatos de archivo con pérdidas\cite{tiff}.
 
 Archivos TIFF:
 \begin{itemize}
@@ -878,7 +876,7 @@ Al correr el script en cada caso se obtienen los datos recabados de la Tabla \re
 
 Analizando las respuestas de ambos archivos, se pueden encontrar factores claves del por qué la relación de compresión entre ambos archivos no es similar y esto se debe a parámetros que se enlistan la Tabla \ref{tab:compression_same}, basados en la teoría de la información. El principal parámetro que produce un cambio en la compresión es la varianza, que en términos simples entre mayor sea este valor los datos están más dispersos y por ende hay mayor probabilidad de disminuir el espacio entre ellos sin perder información, es decir, hay una mayor presencia de redundancia que se puede optimizar y en consecuencia reducir el tamaño del archivo.
 
-Recordando la teoría otra medida relevante es la entropía de la fuente, que indica el nivel de incertidumbre y refleja que a mayor su valor los símbolos que se transmiten tienen más informacion.
+Recordando la teoría otra medida relevante es la entropía de la fuente, que indica el nivel de incertidumbre y refleja que a mayor su valor los símbolos que se transmiten tienen más información. Intuitivamente, ese parámetro es una limitante natural propia de cada fuente y en caso de los archivos tratados, el caso con mayor entropía de fuente fue el que tuvo una menor tasa de compresión debido a que sus símbolos portan más información, y no hay redundancia o espacios de memoria que se puedan reducir sin perder datos importantes (pixeles)\cite{Stone_2022}.
 \section{Conclusiones} 
 
 \begin{itemize}
