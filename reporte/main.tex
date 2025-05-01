@@ -28,6 +28,9 @@
 \usepackage[utf8]{inputenc}
 \usepackage[spanish,es-tabla]{babel}
 
+\usepackage{longtable}
+
+
 \lstset{
   basicstyle=\ttfamily\footnotesize,
   keywordstyle=\color{blue},
@@ -691,16 +694,100 @@ for i in range ( compressed_length_bit ) :
 
 \end{lstlisting}
 
-
-
 \textbf{¿Cuál es el propósito del código mostrado?}
 
+Siguiendo el código en python tal cual, este tiene el propósito de ejecutar los siguientes pasos:
+
+\begin{itemize}
+\item Abrir un archivo en modo de lectura que tiene la ruta de almacenamiento en \texttt{ruta_diccionario}
+\item Se crea una variable auxiliar \texttt{reader} que lee línea por línea el archivo csv.
+\item Se inicializa la variable \texttt{bits_a_leer}
+\item Se crea un diccionario vacío para guardar los datos decodificados
+\item Se inicia la lectura del archivo csv con ayuda del reader, la primera fila del archivos se guardan en \texttt{bits_a_leer} y al terminar de guardarlos se actualizan las demás columnas en el diccionario.
+\item Se crea un nuevo árbol binario.
+\item Siguiendo iterativamente la entrada que corresponde al símbolo, se insertan en el árbol de decodificación.
+\item Se inicializa las raíces del árbol de decodificación.
+ \item Se inicializa una lista para guardar los datos decodificados
+\item Se recorre sobre cada bit del string cuya longitud es \texttt{compressed_length_bit}.
+\item Se obtiene los hijos izquierdo (l) y derecho (r) del nodo actual.
+\item Se recorre a la izquierda o a la derecha dependiendo del bit actual ('0' o '1').
+\item Se compara si el nodo actual es un entero (un nodo hoja), lo añade a \texttt{data_estimated}, y vuelve a la raíz para el siguiente símbolo.
+\end{itemize}
+
+
+En resumen, el código anterior consigue la decodificación siguiendo el árbol de Huff de arriba a hacia abajo rama a rama, hasta que se llega al nodo raíz. Dependiendo si se encuentra un 1 o 0, se recorre una rama u otra del árbol binario hasta que se llega al inicio y en consecuencia la palabra producto de las comparaciones genera la palabra de código fue codificada en un principio por el árbol binario.
 
 
 \textbf{Comparación de datos estimados y los datos originales de la fuente}
 
 
+\begin{table}[H]
+\centering
+\caption{Huffman Codigo 7.1.02.tiff}
+\begin{tabular}{|c|c||c|c||c|c|}
+\hline
+\textbf{Char} & \textbf{Code} & \textbf{Char} & \textbf{Code} & \textbf{Char} & \textbf{Code} \\
+\hline
+177 & 100 & 180 & 011 & 175 & 010 \\
+183 & 001 & 172 & 000 & 186 & 1111 \\
+189 & 1101 & 192 & 1100 & 169 & 1010 \\
+195 & 10110 & 167 & 111011 & 164 & 101110 \\
+162 & 1110001 & 159 & 11100111 & 199 & 10111111 \\
+157 & 10111110 & 155 & 111001101 & 49 & 111000001 \\
+152 & 101111011 & 48 & 101111001 & 110 & 1110101101 \\
+113 & 1110101100 & 112 & 1110101010 & 109 & 1110101000 \\
+150 & 1110100101 & 115 & 1110100001 & 51 & 1110011000 \\
+46 & 1110010111 & 117 & 1110010101 & 108 & 1110010011 \\
+148 & 1110000111 & 118 & 1110000110 & 45 & 1110000100 \\
+146 & 1110000000 & 106 & 1011110101 & 120 & 1011110100 \\
+202 & 11101011111 & 47 & 11101011110 & 140 & 11101011100 \\
+144 & 11101010111 & 130 & 11101010110 & 50 & 11101010010 \\
+134 & 11101001111 & 53 & 11101001110 & 105 & 11101001100 \\
+142 & 11101001001 & 138 & 11101001000 & 132 & 11101000111 \\
+43 & 11101000110 & 55 & 11101000100 & 136 & 11101000001 \\
+127 & 11101000000 & 121 & 11100110011 & 128 & 11100110010 \\
+125 & 11100101101 & 123 & 11100101001 & 52 & 11100100100 \\
+103 & 11100100010 & 42 & 10111100010 & 102 & 10111100001 \\
+58 & 111010111010 & 101 & 111010100110 & 44 & 111001010001 \\
+0 & 111001010000 & 41 & 111001001011 & 40 & 111001000110 \\
+\hline
+\end{tabular}
+\end{table}
 
+
+\begin{table}
+\centering
+\caption{Huffman Codigo 7.1.02_loss.jpeg}
+\begin{tabular}{|c|c||c|c||c|c|}
+\hline
+Char & Huffman Code & Char & Huffman Code & Char & Huffman Code \\
+\hline
+0 & 110001 & 231 & 0101000 & 255 & 0100010 \\
+63 & 0100001 & 199 & 0100000 & 227 & 0011100 \\
+219 & 0010100 & 249 & 0010010 & 207 & 0010001 \\
+1 & 0001100 & 237 & 0001001 & 142 & 0001000 \\
+113 & 0000111 & 243 & 0000110 & 3 & 0000100 \\
+254 & 0000010 & 158 & 0000001 & 252 & 11111110 \\
+110 & 11111101 & 31 & 11111100 & 7 & 11111010 \\
+183 & 11111000 & 159 & 11110011 & 35 & 11110001 \\
+127 & 11110000 & 79 & 11101111 & 218 & 11101101 \\
+220 & 11101100 & 28 & 11101001 & 115 & 11100111 \\
+235 & 11100110 & 126 & 11100101 & 242 & 11100100 \\
+221 & 11100011 & 187 & 11100010 & 145 & 11100001 \\
+57 & 11100000 & 143 & 11011111 & 64 & 11011110 \\
+99 & 11011100 & 60 & 11011011 & 128 & 11011010 \\
+61 & 11011001 & 12 & 11011000 & 238 & 11010111 \\
+122 & 11010110 & 109 & 11010101 & 251 & 11010100 \\
+156 & 11010011 & 29 & 11010010 & 85 & 11010001 \\
+25 & 11001111 & 56 & 11001110 & 167 & 11001101 \\
+211 & 11001100 & 62 & 11001010 & 233 & 11001001 \\
+140 & 11001000 & 149 & 11000011 & 250 & 11000010 \\
+223 & 11000001 & 120 & 11000000 & 118 & 10111111 \\
+59 & 10111110 & 184 & 10111101 & 230 & 10111100 \\
+% Continue the rest in the same format
+\hline
+\end{tabular}
+\end{table}
 
 
 
