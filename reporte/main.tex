@@ -22,6 +22,26 @@
 \usepackage{stfloats}
 \usepackage{titlesec}
 
+\usepackage{listings}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish,es-tabla]{babel}
+
+\lstset{
+  basicstyle=\ttfamily\footnotesize,
+  keywordstyle=\color{blue},
+  commentstyle=\color{gray},
+  stringstyle=\color{orange},
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+  backgroundcolor=\color{gray!10},
+  frame=single,
+  breaklines=true,
+  captionpos=b
+}
+\selectlanguage{spanish}
+
 \usepackage[style=numeric]{biblatex}  % Choose a style like numeric, authoryear, etc.
 \addbibresource{references.bib}       % Note: use this instead of \bibliography
 
@@ -147,15 +167,51 @@ Las hipótesis sobre el comportamiento de los archivos con el código de Huffman
     \item \textbf{7.1.02.tiff}: Es una imagen, que muestra en escala de grises un jet en tierra, donde la reducción en la paleta de colores disminuye la entropía respecto a una imagen a color. La longitud promedio del código depende de la distribución de tonos, pero se espera moderada, y la eficiencia se espera sea buena ya que predominan algunos tonos de grises en grandes áreas.
 \end{itemize}
 
-Se realizó la modificación al script para obtener algunos parámetros como la entropía, la longitud media, varianza, eficiencia de la codificación original y eficiencia del nuevo código generado. En la Fig. \ref{fig:modscript} se observa la modificación al script para el cálculo de los parámetros requeridos.
+Se realizó la modificación al script para obtener algunos parámetros como la entropía, la longitud media, varianza, eficiencia de la codificación original y eficiencia del nuevo código generado. En la Fig. \ref{listing1} se observa la modificación al script para el cálculo de los parámetros requeridos.
 
-\begin{figure}[!h]
-    \begin{center}
-        \includegraphics[width=0.9\linewidth]{figures/modscript.png}
-        \caption{Modificación del script para el cálculo de nuevos parámetros}
-        \label{fig:modscript}
-    \end{center}
-\end{figure}
+%//*\begin{figure}[!h]
+ %   \begin{center}
+%        \includegraphics[width=0.9\linewidth]%{figures/modscript.png}
+ %       \caption{Modificación del script para el cálculo de nuevos parámetros}
+   %     \label{fig:modscript}
+  %  \end{center}
+%%\end{figure}
+%%
+
+\begin{lstlisting}[language=Python, caption={Modificación del script para el cálculo de nuevos parámetros}, label={listing1}]
+
+#Determinar e imprimir la entropia de la fuente:
+information= lambda p:p*log2(1/p)
+entropy=0
+for code in freq:
+    entropy+=information(freq[code])
+print("Entropia de la Fuente: " + str(entropy))
+
+#Determinar e imprimir el largo promedio de los codigos:
+avg_length_new=0
+for code in huffmanCode:
+   avg_length_new+=len(huffmanCode[code])*freq[code]
+print("Largo promedio: " + str(avg_length_new))
+
+#Determinar e imprimir la varianza del nuevo codigo generado:
+code_variance_new=0
+for code in huffmanCode:
+    code_variance_new+=freq[code]*((len(huffmanCode[code])-avg_length_new)**2)
+print("Varianza del codigo original: " + str(code_variance_new))
+
+#Determinar e imprimir la eficiencia del codigo original:
+avg_length_old=entropy/8 #hardcoded a 8 bits en las codificaciones originales
+print("Eficiencia del codigo original: " + str(avg_length_old))
+
+#Determinar e imprimir la eficiencia del nuevo codigo generado:
+try:
+    new_code_efficiency=entropy/avg_length_new
+    print("Eficiencia del nuevo codigo generado: " + str(new_code_efficiency))
+except:
+    print("Largo promedio igual a 0, todos los simbolos son iguales y no se genera diccionario de compresion.")
+
+\end{lstlisting}
+
 
 En la Tabla \ref{tab:huffman_resultados} se observan los resultados al ejecutar el script con todos los archivos mostrados.
 
@@ -541,13 +597,21 @@ Una vez creada la secuencia de bits, se rellena con ceros al final si su longitu
 
 Además, se incorpora una función que permite escribir esta lista de bytes en un archivo binario. Para ello, se utiliza la variable file\_huffman\_comprimido, como se observa em la Fig. \ref{fig:huffmanfile}. Este código convierte cada cadena de bits en un valor entero y luego guarda esos valores en un archivo, exportándolos como una tabla CSV con formato binario, facilitando así su organización y análisis.
 
-\begin{figure}[H]
-    \begin{center}
-        \includegraphics[width=0.9\linewidth]{figures/filehuffman.png}
-        \caption{Función de lista en archivo binario usando file\_huffman\_comprimido}
-        \label{fig:huffmanfile}
-    \end{center}
-\end{figure}
+%/\begin{figure}[H]
+    %\begin{center}
+   %     \includegraphics[width=0.9\linewidth]{figures/filehuffman.png}
+  %      \caption{Función de lista en archivo binario usando file\_huffman\_comprimido}
+ %       \label{fig:huffmanfile}
+%    \end{center}
+%\end{figure}
+
+\begin{lstlisting}[language=Python, caption={Función de lista en archivo binario usando file\_huffman\_comprimido}, label={listing2}]
+#Escribir el archivo con los datos comprimidos.
+compressed_file=open(f"{output_directory}/{file_huffman_comprimido}","wb")
+byte_string=bytearray([int(i,2) for i in byte_string])
+compressed_file.write(byte_string)
+compressed_file.close()
+\end{lstlisting}
 
 También se agregó una sección adicional de código cuya función es exportar los datos comprimidos en un archivo CSV. Este fragmento escribe tanto el tamaño comprimido en bits como cada par clave-valor del diccionario huffmanCode, registrando el símbolo y su correspondiente código Huffman. La Tabla \ref{tab:compression_stats}  muestra un resumen comparativo de los datos comprimidos obtenidos a partir de los archivos previamente utilizados.
 
@@ -597,12 +661,43 @@ Finalmente, archivos 7.1.02.tiff y 5.1.11.tiff, con tasas de compresión cercana
 
 \subsection{Restablecimiento de los datos originales - Descompresión}
 
+\begin{lstlisting}[language=Python, caption={Código modificado para guardar los datos en una carpeta de destino}, label={listing3}]
+
+#Abrir diccionario y descomprimir datos.
+csvfile = open (f"{output_directory}/{ruta_diccionario}" , "r")
+reader = csv . reader ( csvfile )
+bits_a_leer = None 
+diccionario = dict () 
+for row in reader :
+    if( bits_a_leer == None ) :
+        bits_a_leer = int( row [0]) 
+    else:
+        diccionario.update ({ int( row [0]) : row [1]})
+Decoding = NodeTree ( None , None ) 
+for entrada in diccionario :
+    insert_in_tree ( Decoding , diccionario [ entrada ] , entrada )
+nodo = Decoding 
+data_estimated = []
+for i in range ( compressed_length_bit ) :
+    (l , r ) = nodo . children () 
+    if( binary_string [ i ]== "1") :
+        nodo = r
+    else:
+        nodo = l
+    if type ( nodo ) is int :
+        data_estimated . append(nodo)
+        nodo = Decoding
+
+
+\end{lstlisting}
 
 
 
+\textbf{¿Cuál es el propósito del código mostrado?}
 
 
 
+\textbf{Comparación de datos estimados y los datos originales de la fuente}
 
 
 
@@ -628,7 +723,7 @@ Finalmente, archivos 7.1.02.tiff y 5.1.11.tiff, con tasas de compresión cercana
 \end{table}
 
 
-Al revisar las propiedades de ambos  archivos es notorio que para el caso del archivo .tiff tiene un mayor tamaño en comparación del archivo .jpeg, según la Tabla. \ref{tab:jpeg_vs_tiff}  se puede ver que .tiff es aproximadamente es 5 veces el tamaño de .jpeg. Esto tiene sentido dado que la teoría la diferencia entre estos dos es la compresión que se refleja en el tamaño y calidad de las imágenes, para el caso del formato JPEG utiliza compresión con pérdidas y el caso TIFF utiliza compresión sin pérdidas.
+Al revisar las propiedades de ambos  archivos se puede constatar que para el caso del archivo .tiff tiene un mayor tamaño en comparación del archivo .jpeg, según la Tabla. \ref{tab:jpeg_vs_tiff}, esto se puede ver como que .tiff es aproximadamente es 5 veces el tamaño de .jpeg. Esa gran diferencia tiene sentido dado que en la teoría la diferencia entre estos dos tipicamente se distinguen por la compresión que se refleja en el tamaño y calidad de las imágenes, para el caso del formato JPEG utiliza compresión con pérdidas y el caso TIFF utiliza compresión sin pérdidas.
 
 
 \textbf{Formato JPEG}
@@ -651,6 +746,7 @@ Un archivo JPEG admite hasta 24 bits de color y utiliza compresión con pérdida
 
 
 \textbf{Formato TIFF}
+
 Un TIFF(Tag Image File Format) es un archivo informático utilizado para almacenar gráficos rasterizados e información de imágenes. Los TIFF, favoritos de los fotógrafos, son una forma práctica de almacenar imágenes de alta calidad antes de editarlas si quieres evitar los formatos de archivo con pérdidas.
 
 Archivos TIFF:
@@ -664,8 +760,26 @@ Archivos TIFF:
 
 
 \textbf{¿Qué diferencias ve en los resultados? ¿Porqué se da un cambio tan grande?}
+\begin{table}[H]
+    \centering
+    \caption{Tamaño original, comprimido y tasa de compresión por archivo}
+    \label{tab:compression_same}
+    \begin{tabular}{lcccc}
+        \toprule
+        \textbf{Nombre del archivo} & \textbf{Entropia de la fuente$H(\Sigma)$}& \textbf{Varianza código original ($\sigma^2$ )} & \textbf{Tamaño Comprimido (bytes)} & \textbf{Tasa de Compresión} \\
+        \midrule
+        7.1.02_loss.jpg & 7.93548& 0.260 &59033  & 1.004912 \\
+        7.1.02.tiff 	& 4.00 & 3.68  &  132955 & 1.97268 \\
+        \bottomrule 
+    \end{tabular}
+\end{table}
 
 
+Al correr el script en cada caso se obtienen los datos recabados de la Tabla \ref{tab:compression_same}, se puede ver que el tamaño del archivo .tiff tuvo una disminución considerable más de 100 mil bytes respecto al archivo original con una tasa de 1.97268, mientras que para el caso con pérdidas la disminución respecto al archivo original fue cercano a los 300 bytes con una tasa de prácticamente igual a la unidad.
+
+Analizando las respuestas de ambos archivos, se pueden encontrar factores claves del por qué la relación de compresión entre ambos archivos no es similar y esto se debe a parámetros que se enlistan la Tabla \ref{tab:compression_same}, basados en la teoría de la información. El principal parámetro que produce un cambio en la compresión es la varianza, que en términos simples entre mayor sea este valor los datos están más dispersos y por ende hay mayor probabilidad de disminuir el espacio entre ellos sin perder información, es decir, hay una mayor presencia de redundancia que se puede optimizar y en consecuencia reducir el tamaño del archivo.
+
+Recordando la teoría otra medida relevante es la entropía de la fuente, que indica el nivel de incertidumbre y refleja que a mayor su valor los símbolos que se transmiten tienen más informacion.
 \section{Conclusiones} 
 
 \begin{itemize}
