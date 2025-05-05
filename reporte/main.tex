@@ -159,9 +159,9 @@ Al correr el código con dicho archivo, se obtiene la Tabla \ref{tab:huffman_abc
 Las hipótesis sobre el comportamiento de los archivos con el código de Huffman:
 
 \begin{itemize}
-    \item \textbf{todo\_ascii\_cien.bin}: El archivo consiste de los 256 códigos para ASCII repetidos 100 veces, por lo tanto, cada simbolo es equiprobable, la entropía sería igual a $\log_2(8)$, si bien los códigos van a cambiar por como está programado el código de huffman, sin embargo, la longitud del código se mantiene en 8 bits. La eficiencia no cambia con el código nuevo.
+    \item \textbf{todo\_ascii\_cien.bin}: El archivo consiste de los 256 códigos para ASCII repetidos 100 veces, por lo tanto, cada simbolo es equiprobable, la entropía sería igual a $\log_2(256)$, si bien los códigos van a cambiar por como está programado el código de huffman, sin embargo, la longitud del código se mantiene en 8 bits. La eficiencia no cambia con el código nuevo.
     \item \textbf{shannon\_intro.txt}: El archivo contiene texto relacionado con los fundamentos teóricos de la comunicación, posiblemente basado en los trabajos de teoría de Claude Shannon. En él se aborda cómo cuantificar la información transmitida en un sistema de comunicación y cómo diferentes esquemas de modulación, como PCM (modulación por pulsos codificados) y PPM (modulación por posición de pulsos), logran intercambiar ancho de banda por mejoras en la relación señal/ruido. Al aplicar el algoritmo de Huffman sobre este archivo, se espera que se asignen códigos de longitud variable a los caracteres, donde aquellos que aparecen con mayor frecuencia reciban códigos más cortos. Esto se traduce en una codificación más eficiente al reducir la longitud promedio del código.
-    \item \textbf{h\_cero.bin}: El archivo contiene exclusivamente la letra "H" repetida a lo largo de todo el archivo. Al tratarse de una fuente con un único símbolo, la entropía es mínima (cero en teoría), y el código de Huffman asignado será extremadamente simple: bastará con un solo bit para representar toda la información. En este caso, la longitud promedio del código también será mínima y la eficiencia será del 100%, ya que no existe redundancia adicional que pueda ser explotada.
+    \item \textbf{h\_cero.bin}: El archivo contiene exclusivamente la letra "H" repetida a lo largo de todo el archivo. Al tratarse de una fuente con un único símbolo, la entropía es mínima (cero en teoría), y el código de Huffman asignado será extremadamente simple: bastará con un solo bit para representar toda la información. En este caso, la longitud promedio del código también será mínima y la eficiencia será del 100 \%, ya que no existe redundancia adicional que pueda ser explotada.
     \item \textbf{4.1.01.tiff}: Es una imagen, que muestra una persona con vestimenta y un fondo con gran variedad de colores, lo que implica una alta diversidad de valores de píxeles. Desde el punto de vista de la teoría de la información, esto se traduce en una alta entropía, ya que hay poca redundancia en los datos. Al aplicar Huffman, la longitud promedio del código tenderá a ser mayor, ya que los símbolos tienen probabilidades más uniformes y se requiere más información para representarlos. En consecuencia, la eficiencia de compresión será menor comparada con imágenes más simples o menos variadas, ya que hay menos redundancia que explotar.
     \item \textbf{4.2.03.tiff}: Es una imagen, que muestra un mandril con gran variedad de colores, lo que implica una alta diversidad de valores de píxeles. Desde el punto de vista de la teoría de la información, esto se traduce en una alta entropía, ya que hay poca redundancia en los datos. Al aplicar Huffman, la longitud promedio del código tenderá a ser mayor, ya que los símbolos tienen probabilidades más uniformes y se requiere más información para representarlos. En consecuencia, la eficiencia de compresión será menor comparada con imágenes más simples o menos variadas, ya que hay menos redundancia que explotar.
     \item \textbf{5.1.11.tiff}: Es una imagen, que muestra un avión en escala de grises, lo que reduce considerablemente la cantidad de colores posibles. Esto puede generar mayor redundancia en los datos, por tanto, la entropía es moderada, y el algoritmo de Huffman puede asignar códigos más cortos a los valores de gris más frecuentes. Se espera una longitud promedio del código menor que en imágenes a color, y una eficiencia de codificación aceptable.
@@ -169,16 +169,10 @@ Las hipótesis sobre el comportamiento de los archivos con el código de Huffman
     \item \textbf{7.1.02.tiff}: Es una imagen, que muestra en escala de grises un jet en tierra, donde la reducción en la paleta de colores disminuye la entropía respecto a una imagen a color. La longitud promedio del código depende de la distribución de tonos, pero se espera moderada, y la eficiencia se espera sea buena ya que predominan algunos tonos de grises en grandes áreas.
 \end{itemize}
 
-Se realizó la modificación al script para obtener algunos parámetros como la entropía, la longitud media, varianza, eficiencia de la codificación original y eficiencia del nuevo código generado. En la Fig. \ref{listing1} se observa la modificación al script para el cálculo de los parámetros requeridos.
+\newpage
 
-%//*\begin{figure}[!h]
- %   \begin{center}
-%        \includegraphics[width=0.9\linewidth]%{figures/modscript.png}
- %       \caption{Modificación del script para el cálculo de nuevos parámetros}
-   %     \label{fig:modscript}
-  %  \end{center}
-%%\end{figure}
-%%
+Se realizó la modificación al script para obtener algunos parámetros como la entropía, la longitud media, varianza, eficiencia de la codificación original y eficiencia del nuevo código generado. En el Código. \ref{listing1} se observa la modificación al script para el cálculo de los parámetros requeridos.
+
 
 \begin{lstlisting}[language=Python, caption={Modificación del script para el cálculo de nuevos parámetros}, label={listing1}]
 
@@ -216,10 +210,6 @@ except:
 
 
 En la Tabla \ref{tab:huffman_resultados} se observan los resultados al ejecutar el script con todos los archivos mostrados.
-
-\hfill\break \hfill\break \hfill\break \hfill\break \hfill\break
-\hfill\break \hfill\break 
-
 
  \begin{table*}[h!]
     \centering
@@ -492,10 +482,11 @@ En la Tabla \ref{tab:huffman_resultados} se observan los resultados al ejecutar 
     
     \item \textbf{5.1.13.tiff}: La entropía es muy baja, lo que concuerda con la gran cantidad de fondo blanco. La longitud del código no está tan cercana a la entropía, y la varianza es alta, probablemente porque algunos símbolos menos frecuentes recibieron códigos largos. La eficiencia generada es notablemente baja, pero esto es esperable dado el contraste fuerte entre frecuencias muy distintas y aún así es mejor que la eficiencia original.
     
-    \begin{table}[H]
+\begin{table}[H]
 \centering
 \caption{Código Huffman para 5.1.13.tiff}
 \label{tab:huffman_5.1.13.tiff}
+\small
 \begin{tabular}{cccccccccccc}
 \toprule
 \textbf{Char} & \textbf{Código} & \textbf{Char} & \textbf{Código} & \textbf{Char} & \textbf{Código} & \textbf{Char} & \textbf{Código} & \textbf{Char} & \textbf{Código} & \textbf{Char} & \textbf{Código} \\
@@ -547,9 +538,9 @@ En la Tabla \ref{tab:huffman_resultados} se observan los resultados al ejecutar 
 \end{tabular}
 \end{table}
     
-    \item \textbf{7.1.02.tiff}: Muestra una entropía baja con longitud promedio muy cercana y varianza relativamente alta, indicando diferencias notables entre la frecuencia de los tonos. La eficiencia del código generado es bastante alta , aunque la original sea baja, evidenciando una mejora significativa mediante Huffman.
+\item \textbf{7.1.02.tiff}: Muestra una entropía baja con longitud promedio muy cercana y varianza relativamente alta, indicando diferencias notables entre la frecuencia de los tonos. La eficiencia del código generado es bastante alta , aunque la original sea baja, evidenciando una mejora significativa mediante Huffman.
     
-    \begin{table}[H]
+\begin{table}[H]
 \centering
 \caption{Código Huffman para 7.1.02.tiff}
 \label{tab:huffman_7.1.02.tiff}
@@ -597,15 +588,9 @@ Este código implementa la compresión utilizando el algoritmo de Huffman. Para 
 
 Una vez creada la secuencia de bits, se rellena con ceros al final si su longitud no es múltiplo de 8, asegurando que pueda dividirse en bytes completos. Posteriormente, esta secuencia se transforma en una lista de bytes, donde cada uno se representa como una cadena de 8 bits.
 
-Además, se incorpora una función que permite escribir esta lista de bytes en un archivo binario. Para ello, se utiliza la variable file\_huffman\_comprimido, como se observa em la Fig. \ref{fig:huffmanfile}. Este código convierte cada cadena de bits en un valor entero y luego guarda esos valores en un archivo, exportándolos como una tabla CSV con formato binario, facilitando así su organización y análisis.
+Además, se incorpora una función que permite escribir esta lista de bytes en un archivo binario. Para ello, se utiliza la variable file\_huffman\_comprimido, como se observa en el Código \ref{listing2}. Este código convierte cada cadena de bits en un valor entero y luego guarda esos valores en un archivo, exportándolos como una tabla CSV con formato binario, facilitando así su organización y análisis.
 
-%/\begin{figure}[H]
-    %\begin{center}
-   %     \includegraphics[width=0.9\linewidth]{figures/filehuffman.png}
-  %      \caption{Función de lista en archivo binario usando file\_huffman\_comprimido}
- %       \label{fig:huffmanfile}
-%    \end{center}
-%\end{figure}
+
 
 \begin{lstlisting}[language=Python, caption={Función de lista en archivo binario usando file\_huffman\_comprimido}, label={listing2}]
 #Escribir el archivo con los datos comprimidos.
@@ -658,7 +643,7 @@ Finalmente, archivos 7.1.02.tiff y 5.1.11.tiff, con tasas de compresión cercana
 
 
 
-
+\newpage
 
 
 \subsection{Restablecimiento de los datos originales - Descompresión}
@@ -716,6 +701,7 @@ Siguiendo el código en python tal cual, este tiene el propósito de ejecutar lo
 
 En resumen, el código anterior consigue la decodificación siguiendo el árbol de Huff de arriba a hacia abajo rama a rama, hasta que se llega al nodo raíz. Dependiendo si se encuentra un 1 o 0, se recorre una rama u otra del árbol binario hasta que se llega al inicio y en consecuencia la palabra producto de las comparaciones genera la palabra de código fue codificada en un principio por el árbol binario.
 
+\newpage
 
 \textbf{Comparación de datos estimados y los datos originales de la fuente}
 
@@ -801,7 +787,7 @@ Y para corroborar el código recuperado en los anexos se describen la Tabla \ref
     \label{tab:compression_recover}
     \begin{tabular}{lcccc}
         \toprule
-        \textbf{Nombre del archivo} & \textbf{Entropia de la fuente$H(\Sigma)$}& \textbf{Varianza código original ($\sigma^2$ )} & \textbf{Tamaño Comprimido (bytes)} & \textbf{Tasa de Compresión} \\
+        \textbf{Nombre del archivo} & \textbf{Entropia $H(\Sigma)$}& \textbf{Varianza código original ($\sigma^2$ )} & \textbf{Tamaño Comprimido (bytes)} & \textbf{Tasa de Compresión} \\
         \midrule
         recovered_7.1.02_loss.jpg & 7.93548& 0.260 &59033  & 1.004912 \\
         recovered_7.1.02.tiff 	& 4.00 & 3.68  &  132955 & 1.97268 \\
@@ -881,7 +867,7 @@ Archivos TIFF:
     \label{tab:compression_same}
     \begin{tabular}{lcccc}
         \toprule
-        \textbf{Nombre del archivo} & \textbf{Entropia de la fuente$H(\Sigma)$}& \textbf{Varianza código original ($\sigma^2$ )} & \textbf{Tamaño Comprimido (bytes)} & \textbf{Tasa de Compresión} \\
+        \textbf{Nombre del archivo} & \textbf{Entropia $H(\Sigma)$}& \textbf{Varianza código original ($\sigma^2$ )} & \textbf{Tamaño Comprimido (bytes)} & \textbf{Tasa de Compresión} \\
         \midrule
         7.1.02_loss.jpg & 7.93548& 0.260 &59033  & 1.004912 \\
         7.1.02.tiff 	& 4.00 & 3.68  &  132955 & 1.97268 \\
