@@ -725,7 +725,7 @@ En resumen, el código anterior consigue la decodificación siguiendo el árbol 
 \centering
 \caption{Huffman Codigo 7.1.02.tiff}
 \label{tab:compression_tiff}
-\begin{tabular}{|c|c||c|c||c|c|}
+\begin{tabular}{lcccccc}
 \hline
 \textbf{Char} & \textbf{Code} & \textbf{Char} & \textbf{Code} & \textbf{Char} & \textbf{Code} \\
 \hline
@@ -760,7 +760,7 @@ En resumen, el código anterior consigue la decodificación siguiendo el árbol 
 \centering
 \caption{Huffman Codigo 7.1.02_loss.jpeg}
 \label{tab:compression_jpeg}
-\begin{tabular}{|c|c||c|c||c|c|}
+\begin{tabular}{lcccccc}
 \hline
 Char & Huffman Code & Char & Huffman Code & Char & Huffman Code \\
 \hline
@@ -790,7 +790,24 @@ Char & Huffman Code & Char & Huffman Code & Char & Huffman Code \\
 \end{tabular}
 \end{table}
 
-Seguidamente, al correr el script para cada caso la codificación óptima visitante se puede comprobar en las Tabla \ref{tab:compression_jpeg} y la Tabla \ref{tab:compression_tiff}. Y para corroborar el código recuperado en los anexos se describen las Tabla \ref{tab:dict_compact1} y Tabla \ref{tab:loss_dict_compact} con los datos obtenidos.
+Seguidamente, al correr el script para cada caso la codificación óptima que se puede conseguir se resume en la Tabla \ref{tab:compression_jpeg} y la Tabla \ref{tab:compression_tiff}. Que es esperado que las tablas no coinciden entre sí, por el simple hecho que el algoritmo asigna el conjunto de símbolos en función de la aparición y apesar que visualmente es la misma imagen, los bits que forman los píxeles en cada formato tiene una distribución diferente que influye en la eficiencia del código.
+
+
+Y para corroborar el código recuperado en los anexos se describen la Tabla \ref{tab:dict_compact1} y Tabla \ref{tab:loss_dict_compact} con los datos obtenidos despues de pasar por el proceso de decodificación, con los cuales se recuperaron las imágenes llamadas \texttt{recovered_7.1.02.tiff} y \texttt{recovered_7.1.02_loss.jpg}. A estas se le ejecutó el script nuevamente para confirmar que no hubo ninguna alteración a las imágenes originales, de tal forma que se enlista en la Tabla \ref{tab:compression_recover} que los datos obtenidos son conformes a los puntos anteriores.
+
+\begin{table}[H]
+    \centering
+    \caption{Tamaño original, comprimido y tasa de compresión por archivo}
+    \label{tab:compression_recover}
+    \begin{tabular}{lcccc}
+        \toprule
+        \textbf{Nombre del archivo} & \textbf{Entropia de la fuente$H(\Sigma)$}& \textbf{Varianza código original ($\sigma^2$ )} & \textbf{Tamaño Comprimido (bytes)} & \textbf{Tasa de Compresión} \\
+        \midrule
+        recovered_7.1.02_loss.jpg & 7.93548& 0.260 &59033  & 1.004912 \\
+        recovered_7.1.02.tiff 	& 4.00 & 3.68  &  132955 & 1.97268 \\
+        \bottomrule 
+    \end{tabular}
+\end{table}
 
 La forma de decodificación que se plantea es por medio del seguimiento bit a bit del Árbol de Huffman, consiguiendo un resultado rápido de la palabra que se codificó. Sin embargo, en casos que la fuente conste de símbolos muy grandes la computación aumenta y por ende tanto los recursos como el tiempo de ejecución de la codificación se puede volver impráctica si hay limitantes como los mencionados.
 
@@ -878,17 +895,15 @@ Al correr el script en cada caso se obtienen los datos recabados de la Tabla \re
 Analizando las respuestas de ambos archivos, se pueden encontrar factores claves del por qué la relación de compresión entre ambos archivos no es similar y esto se debe a parámetros que se enlistan la Tabla \ref{tab:compression_same}, basados en la teoría de la información. El principal parámetro que produce un cambio en la compresión es la varianza, que en términos simples entre mayor sea este valor los datos están más dispersos y por ende hay mayor probabilidad de disminuir el espacio entre ellos sin perder información, es decir, hay una mayor presencia de redundancia que se puede optimizar y en consecuencia reducir el tamaño del archivo.
 
 Recordando la teoría otra medida relevante es la entropía de la fuente, que indica el nivel de incertidumbre y refleja que a mayor su valor los símbolos que se transmiten tienen más información. Intuitivamente, ese parámetro es una limitante natural propia de cada fuente y en caso de los archivos tratados, el caso con mayor entropía de fuente fue el que tuvo una menor tasa de compresión debido a que sus símbolos portan más información, y no hay redundancia o espacios de memoria que se puedan reducir sin perder datos importantes (pixeles)\cite{Stone_2022}.
+
 \section{Conclusiones} 
 
 \begin{itemize}
 
-\item Se comprobó 
+\item Se comprobó con conceptos básicos de la entropía de la fuente, imágenes que a primera vista lucen similares o casi iguales producen información promedio por símbolo totalmente diferentes, destacando que ciertos símbolos pueden tener más información que otros o el caso contrario menos información. 
+\item Una característica de la información es su naturaleza redundante, que propicia la comprensión eliminando esa porción de información y se consigue una optimización del uso del medio.
+\item Se demostró que es posible comprimir datos y volver a recuperarlos sin pérdidas, al pasar por un código de fuente como el algoritmo de Huffman que es el más óptimo que consigue el largo promedio más cercano a la entropía de la fuente.
 
-\item El 
-
-\item Se demostró 
-
-\item  En cuanto
 
 \end{itemize}
 
@@ -897,13 +912,17 @@ Recordando la teoría otra medida relevante es la entropía de la fuente, que in
 \printbibliography[heading=none]
 
 \section{Anexos}
+\href{https://github.com/NagelMS/Tarea2_CE2.git}{Link al repositorio de GitHub}
+
+
+
 Datos recuperados para cada archivo solicitado inciso 2.4 .
 
 \begin{table}[h]
 \centering
 \caption{Diccionario de 7.1.02$\_diccionario.csv$}
 \label{tab:dict_compact1}
-\begin{tabular}{cccccc}
+\begin{tabular}{lcccccc}
 \hline
 \textbf{Value} & \textbf{Code} & \textbf{Value} & \textbf{Code} & \textbf{Value} & \textbf{Code} \\ \hline
 172 & 000 & 183 & 001 & 175 & 010 \\ \hline
@@ -970,7 +989,7 @@ Datos recuperados para cada archivo solicitado inciso 2.4 .
 \centering
 \caption{Diccionario de 7.1.02$\_loss\_diccionario.csv$}
 \label{tab:loss_dict_compact}
-\begin{tabular}{cccccc}
+\begin{tabular}{lcccccc}
 \hline
 \textbf{Value} & \textbf{Code} & \textbf{Value} & \textbf{Code} & \textbf{Value} & \textbf{Code} \\ \hline
 148 & 00000000 & 67 & 00000001 & 158 & 0000001 \\ \hline
@@ -1068,7 +1087,6 @@ Datos recuperados para cada archivo solicitado inciso 2.4 .
 
 
 
-\href{https://github.com/NagelMS/Tarea2_CE2.git}{Link al repositorio de GitHub}
 
 \end{document} 
 
